@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Game Details · APK HUB</title>
+  <style>
+    /* ---------- same global styles as homepage ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: url('https://i.ytimg.com/vi/G86ni1XV2ic/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGD0gZShgMA8=&amp;rs=AOn4CLALOO-uGpzQ5PIsVX3Vm4VvYLNqmw') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(10, 10, 20, 0.5);
+      z-index: 0;
+    }
+
+    .main-wrapper {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1000px;  /* narrower for detail page */
+      margin: 20px auto;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(2px);
+      border-radius: 40px;
+      padding: 25px 25px 35px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .container {
+      width: 100%;
+      background: transparent;
+    }
+
+    /* ---------- header with back button ---------- */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50px;
+      padding: 10px 20px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateX(-3px);
+    }
+
+    .back-btn span {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .header-spacer {
+      width: 80px; /* invisible for balance */
+    }
+
+    /* ---------- game intro : icon + title + download ---------- */
+    .game-intro {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 30px;
+      background: rgba(0,0,0,0.2);
+      backdrop-filter: blur(5px);
+      border-radius: 30px;
+      padding: 25px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .game-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 5px;
+      object-fit: cover;
+      background: white;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      border: 2px solid rgba(255,255,255,0.5);
+    }
+
+    .game-title-block {
+      flex: 1;
+    }
+
+    .game-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 2px 2px 5px black;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .game-meta {
+      font-size: 1rem;
+      color: #ddd;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .game-meta span {
+      background: rgba(255,255,255,0.15);
+      padding: 5px 15px;
+      border-radius: 50px;
+    }
+
+    .download-btn {
+      background: #f5b921;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #0a0f14;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: 0.2s;
+      border: 1px solid white;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .download-btn:hover {
+      background: #ffcc4d;
+      transform: scale(1.02);
+    }
+
+    /* ---------- description section ---------- */
+    .description {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(5px);
+      border-radius: 30px;
+      padding: 25px;
+      margin: 30px 0;
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .description h2 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: #111;
+      border-left: 6px solid #f5b921;
+      padding-left: 15px;
+    }
+
+    .description p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #222;
+      margin-bottom: 15px;
+    }
+
+    /* ---------- screenshot carousel (horizontal scroll) ---------- */
+    .screenshots-section {
+      margin: 40px 0 20px;
+    }
+
+    .screenshots-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: white;
+      text-shadow: 2px 2px 3px black;
+      border-left: 6px solid #f5b921;
+      padding-left: 15px;
+    }
+
+    .carousel {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding: 10px 5px 20px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: #f5b921 rgba(255,255,255,0.2);
+    }
+
+    .carousel::-webkit-scrollbar {
+      height: 8px;
+    }
+    .carousel::-webkit-scrollbar-thumb {
+      background: #f5b921;
+      border-radius: 20px;
+    }
+    .carousel::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+    }
+
+    .screenshot-item {
+      flex: 0 0 auto;
+      width: 250px;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      border: 2px solid rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .screenshot-item:hover {
+      transform: scale(1.02);
+      border-color: #f5b921;
+    }
+
+    .screenshot-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ---------- lightbox (fullscreen zoom) ---------- */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border: 4px solid white;
+      border-radius: 12px;
+      box-shadow: 0 0 40px black;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    /* ---------- responsive adjustments ---------- */
+    @media (max-width: 768px) {
+      .main-wrapper {
+        padding: 15px 15px 25px;
+        margin: 10px;
+        border-radius: 30px;
+      }
+      .game-intro {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+      .game-title {
+        font-size: 2rem;
+      }
+      .download-btn {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 1.2rem;
+      }
+      .game-icon {
+        width: 100px;
+        height: 100px;
+      }
+      .back-btn {
+        padding: 8px 15px;
+      }
+      .screenshot-item {
+        width: 220px;
+      }
+      .screenshot-item img {
+        height: 140px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .game-title {
+        font-size: 1.8rem;
+      }
+      .description h2, .screenshots-section h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 40px;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 60px;
+    }
+  </style>
+</head>
+<body>
+<div class="main-wrapper">
+  <div class="container">
+
+    <!-- header with back button (left) and invisible spacer (right) -->
+    <div class="page-header">
+      <a href="https://apkporngames.github.io/" class="back-btn"><span>←</span> Back</a>
+      <div class="header-spacer"></div>
+    </div>
+
+    <!-- game intro: icon, title, download button -->
+    <div class="game-intro">
+      <img class="game-icon" src="https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF" alt="Game Icon">
+      <div class="game-title-block">
+        <h1 class="game-title">Asphalt 9: Legends</h1>
+        <div class="game-meta">
+          <span>Racing</span>
+          <span>1.5 GB</span>
+          <span>v3.5.1</span>
+        </div>
+      </div>
+      <a href="#" class="download-btn">📥 DOWNLOAD APK</a>
+    </div>
+
+    <!-- description -->
+    <div class="description">
+      <h2>Description</h2>
+      <p>Asphalt 9: Legends is a high-octane racing game with stunning graphics and a vast collection of luxury cars. Take the wheel of legendary vehicles like Ferrari, Lamborghini, and Porsche. Compete in intense multiplayer races or enjoy the single-player career mode. With intuitive touch controls and console-quality visuals, it's the ultimate arcade racer for Android.</p>
+      <p>Features: • 50+ world-famous cars • 70+ tracks in dynamic locations • Multiplayer up to 8 players • Customize and upgrade your cars • Daily events and rewards.</p>
+    </div>
+
+    <!-- screenshots carousel -->
+    <div class="screenshots-section">
+      <h2>Screenshots</h2>
+      <div class="carousel" id="screenshotCarousel">
+        <!-- each screenshot item (clickable) -->
+        <div class="screenshot-item" onclick="openLightbox('https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF')">
+          <img src="https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF" alt="Screenshot 1">
+        </div>
+        <div class="screenshot-item" onclick="openLightbox('https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF')">
+          <img src="https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF" alt="Screenshot 1">
+        </div>
+        <div class="screenshot-item" onclick="openLightbox('https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF')">
+          <img src="https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF" alt="Screenshot 1">
+        </div>
+        <div class="screenshot-item" onclick="openLightbox('https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF')">
+          <img src="https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF" alt="Screenshot 1">
+        </div>
+        <div class="screenshot-item" onclick="openLightbox('https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF')">
+          <img src="https://store-images.s-microsoft.com/image/apps.808.14492077886571533.be42f4bd-887b-4430-8ed0-622341b4d2b0.c8274c53-105e-478b-9f4b-41b8088210a3?q=90&w=512&h=768&mode=crop&format=jpg&background=%23FFFFFF" alt="Screenshot 1">
+        </div>
+      </div>
+    </div>
+
+    <!-- small footer note -->
+    <div class="footer-note">⚡ click any screenshot to zoom ⚡</div>
+  </div>
+</div>
+
+<!-- lightbox overlay (hidden by default) -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="Zoomed Screenshot">
+</div>
+
+<script>
+  // lightbox functions
+  function openLightbox(imgSrc) {
+    document.getElementById('lightbox-img').src = imgSrc;
+    document.getElementById('lightbox').classList.add('active');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+  }
+
+  // optional: close with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeLightbox();
+    }
+  });
+</script>
+<!-- 
+  NOTES:
+  * Back button href = "index.html" – change to your homepage URL.
+  * Icon, images, description, download link are placeholders; replace later.
+  * All text in English.
+  * Screenshots carousel is horizontally scrollable. Click any thumbnail to zoom.
+  * Lightbox closes when you click anywhere (background or image).
+-->
+</body>
+</html>
